@@ -1,0 +1,15 @@
+catalog_name: "analytics"
+dev_schema: "dev"
+prod_schema: "prod"
+
+# Governance catalog & schema where policies live
+governance_catalog: "governance"
+governance_schema: "security"
+
+metastore_id: ""
+
+groups:
+  admins: "data_admins"
+  engineers: "data_engineers"
+  analysts: "data_analysts"
+  readers: "data_readers"

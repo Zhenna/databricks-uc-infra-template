@@ -1,0 +1,57 @@
+bundle:
+  name: databricks-uc-template-governance
+
+resources:
+  jobs:
+    create_tables_and_bindings:
+      name: uc-create-tables-and-bindings
+      tasks:
+        - task_key: run_sql_dev_prod
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            num_workers: 1
+          spark_python_task:
+            python_file: ../src/sql_runner.py
+          environment_variables:
+            CATALOG: "{{var.catalog_name}}"
+            DEV_SCHEMA: "{{var.dev_schema}}"
+            PROD_SCHEMA: "{{var.prod_schema}}"
+            GOVERNANCE_CATALOG: "{{var.governance_catalog}}"
+            GOVERNANCE_SCHEMA: "{{var.governance_schema}}"
+      permissions:
+        - level: CAN_VIEW
+          group_name: "users"
+
+variables:
+  catalog_name: "analytics"
+  dev_schema: "dev"
+  prod_schema: "prod"
+  governance_catalog: "governance"
+  governance_schema: "security"
+
+targets:
+  dev:
+    workspace:
+      profile: dev
+      root_path: /Workspace/Repos/${workspace.current_user.userName}/databricks-uc-template-governance
+    variables:
+      catalog_name: "analytics"
+      dev_schema: "dev"
+      prod_schema: "prod"
+      governance_catalog: "governance"
+      governance_schema: "security"
+
+  prod:
+    workspace:
+      profile: prod
+      root_path: /Workspace/Repos/${workspace.current_user.userName}/databricks-uc-template-governance
+    variables:
+      catalog_name: "analytics"
+      dev_schema: "dev"
+      prod_schema: "prod"
+      governance_catalog: "governance"
+      governance_schema: "security"
+
+  default:
+    workspace:
+      root_path: /Workspace/Repos/${workspace.current_user.userName}/databricks-uc-template-governance
